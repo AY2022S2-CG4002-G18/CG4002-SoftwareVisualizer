@@ -19,8 +19,8 @@ public class ConfigManager : MonoBehaviour
     }
     public void UpdateConfig()
     {
-        Config.HOST = hostInput.text;
-        Config.PORT = int.Parse(portInput.text);
+        if (hostInput.IsActive()) Config.HOST = hostInput.text;
+        if (portInput.IsActive()) Config.PORT = int.Parse(portInput.text);
         Config.PLAYER_ID = playerID.options[playerID.value].text;
         Config.GOD_MODE = godMode.isOn;
         EnterNextScene();

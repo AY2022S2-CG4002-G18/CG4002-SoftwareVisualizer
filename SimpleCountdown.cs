@@ -8,16 +8,21 @@ public class SimpleCountdown : MonoBehaviour
     public Text text;
 
     public int max = 10;
-    int count;
+    public int count;
 
     private void Start()
     {
-        count = max;
+        resetCountDown();
     }
 
     void Update()
     {
         text.text = count.ToString();
+    }
+
+    public void resetCountDown()
+    {
+        count = max;
     }
 
     public void beginCountdown()

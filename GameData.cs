@@ -31,7 +31,7 @@ public class GameData : MonoBehaviour
             {
                 values[index] = value;
 
-                SyncHPAndAmmo(name, values[index]);
+                //SyncHPAndAmmo(name, values[index]);
 
                 return true;
             }
@@ -50,7 +50,7 @@ public class GameData : MonoBehaviour
                 values[index] += value;
 
                 //SyncHPAndAmmo(name, values[index]);
-                SyncData();
+                //SyncData();
 
                 return true;
             }
@@ -60,9 +60,18 @@ public class GameData : MonoBehaviour
         return false;
     }
 
-    private void SyncData()
+    public void SyncData()
     {
-        webClient.SendClientMessage(gamePlay.playerID + "Game data");
+        webClient.SendClientMessage(gamePlay.playerID +
+            String.Format(":{{'hp': {0},'bullets': {1},'grenades': {2},'shield_time': {3},'shield_health': {4},'num_deaths': {5},'num_shield': {6}}}",
+            GetValue("HP"),
+            GetValue("Ammo"),
+            GetValue("Grenade"),
+            gamePlay.canShield ? 0 : (10 - gamePlay.shieldCountdown[GetValue("ShieldNum")].count),
+            GetValue("Shield"),
+            gamePlay.deathNum,
+            GetValue("ShieldNum")
+            ));
     }
     
     private void SyncHPAndAmmo(string name, int value)

@@ -19,6 +19,9 @@ public class BackgroundImage : MonoBehaviour
     {
         camTextureHolder = new Material(shaderMaterial);
         camTextureHolder.mainTexture = input;
+
+        float Alpha = (float)1080 / (float)Screen.height * (float)Screen.width * 0.5f / (float)1920;
+        shaderMaterial.SetFloat("_Alpha", Alpha);
     }
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)

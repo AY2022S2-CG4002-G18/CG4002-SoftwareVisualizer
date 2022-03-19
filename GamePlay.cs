@@ -27,13 +27,16 @@ public class GamePlay : MonoBehaviour
 
     public GameObject explosion;
 
-    bool canShield = true;
+    public bool canShield = true;
+
+    public int deathNum = 0;
 
     public static bool enemyInSight = false;
 
     private void Start()
     {
         playerID = Config.PLAYER_ID;
+        webClient.queueName = Config.PLAYER_ID;
     }
 
     public void HandleMessageFromServer(string message)
@@ -82,6 +85,16 @@ public class GamePlay : MonoBehaviour
                             Invoker.InvokeInMainThread(Reload);
                             break;
                         }
+                    case "Respawn":
+                        {
+                            Invoker.InvokeInMainThread(Respawn);
+                            break;
+                        }
+                    case "Sync":
+                        {
+                            Invoker.InvokeInMainThread(SyncData);
+                            break;
+                        }
                     default:
                         {
                             //Handle non-action message
@@ -127,12 +140,27 @@ public class GamePlay : MonoBehaviour
     {
         gameData.SetValue("HP", 100);
         gameData.SetValue("Shield", 0);
+        gameData.SetValue("ShieldNum", 3);
         gameData.SetValue("Ammo", 6);
         gameData.SetValue("Grenade", 2);
         gameData.SetValue("OHP", 100);
         gameData.SetValue("OAmmo", 6);
+        foreach (SimpleCountdown countdown in shieldCountdown)
+        {
+            countdown.resetCountDown();
+        }
     }
 
+    private void Respawn()
+    {
+        Init();
+    }
+
+    private void SyncData()
+    {
+        gameData.SyncData();
+
+    }
     private void Shoot()
     {
         if (gameData.AddValue("Ammo", -1))
@@ -146,6 +174,8 @@ public class GamePlay : MonoBehaviour
         {
             //No ammo
             reloadAnim.SetTrigger("Hint");
+
+            webClient.SendClientMessage(playerID + ":InvalidShoot");
         }
     }
 
@@ -212,6 +242,11 @@ public class GamePlay : MonoBehaviour
                 grenadeControl.ThrowGrenade();
                 webClient.SendClientMessage(playerID + ":ValidGrenade");
             }
+            else
+            {
+                //Failed grenade
+                webClient.SendClientMessage(playerID + ":InvalidGrenade");
+            }
         }
     }
 
@@ -225,6 +260,7 @@ public class GamePlay : MonoBehaviour
                 shieldObject.SetActive(true);
                 canShield = false;
                 Invoke("ResetShield", 10);
+                Invoke("ResetShieldActivation", 10);
 
                 int shieldIndex = gameData.GetValue("ShieldNum");
                 shieldCountdown[shieldIndex].beginCountdown();
@@ -238,12 +274,16 @@ public class GamePlay : MonoBehaviour
     {
         gameData.SetValue("Shield", 0);
         shieldObject.SetActive(false);
-        canShield = true;
 
         int shieldIndex = gameData.GetValue("ShieldNum");
         shieldCountdown[shieldIndex].forceToZero();
 
         webClient.SendClientMessage(playerID + ":ShieldOff");
+    }
+
+    private void ResetShieldActivation()
+    {
+        canShield = true;
     }
 
     private void Reload()
@@ -303,6 +343,8 @@ public class GamePlay : MonoBehaviour
     public void GameOver()
     {
         //???
+
+        deathNum++;
         webClient.SendClientMessage(playerID + ":Die");
     }
 }
