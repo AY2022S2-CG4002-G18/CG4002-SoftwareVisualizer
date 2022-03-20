@@ -63,7 +63,7 @@ public class GameData : MonoBehaviour
     public void SyncData()
     {
         webClient.SendClientMessage(gamePlay.playerID +
-            String.Format(":{{'hp': {0},'bullets': {1},'grenades': {2},'shield_time': {3},'shield_health': {4},'num_deaths': {5},'num_shield': {6}}}",
+            String.Format("|Data|{{\"hp\": {0},\"bullets\": {1},\"grenades\": {2},\"shield_time\": {3},\"shield_health\": {4},\"num_deaths\": {5},\"num_shield\": {6}}}",
             GetValue("HP"),
             GetValue("Ammo"),
             GetValue("Grenade"),
@@ -74,7 +74,7 @@ public class GameData : MonoBehaviour
             ));
     }
     
-    private void SyncHPAndAmmo(string name, int value)
+/*    private void SyncHPAndAmmo(string name, int value)
     {
         if (name == "HP")
         {
@@ -84,7 +84,7 @@ public class GameData : MonoBehaviour
         {
             webClient.SendClientMessage(gamePlay.playerID + ":Ammo-" + value.ToString());
         }
-    }
+    }*/
 
     public int GetValue(string name)
     {

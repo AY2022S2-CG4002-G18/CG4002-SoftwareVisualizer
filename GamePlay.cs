@@ -41,15 +41,15 @@ public class GamePlay : MonoBehaviour
 
     public void HandleMessageFromServer(string message)
     {
-        if (!message.Contains(":"))
+        if (!message.Contains("|"))
         {
             return;
         }
         else
         {
-            string name = message.Substring(0, message.IndexOf(":")).Trim();
+            string name = message.Substring(0, message.IndexOf("|")).Trim();
             Debug.Log(name);
-            string value = message.Substring(message.IndexOf(":") + 1).Trim();
+            string value = message.Substring(message.IndexOf("|") + 1).Trim();
             Debug.Log(value);
             if (name == playerID)
             {
@@ -168,14 +168,14 @@ public class GamePlay : MonoBehaviour
             //Successful shot
             shootAudioSource.Play();
 
-            webClient.SendClientMessage(playerID + ":ValidShoot");
+            webClient.SendClientMessage(playerID + "|ValidShoot");
         }
         else
         {
             //No ammo
             reloadAnim.SetTrigger("Hint");
 
-            webClient.SendClientMessage(playerID + ":InvalidShoot");
+            webClient.SendClientMessage(playerID + "|InvalidShoot");
         }
     }
 
@@ -240,12 +240,12 @@ public class GamePlay : MonoBehaviour
                 throwAudioSource.Play();
                 //Instantiate(grenadeObject, grenadeRespawn.position, grenadeRespawn.rotation);
                 grenadeControl.ThrowGrenade();
-                webClient.SendClientMessage(playerID + ":ValidGrenade");
+                webClient.SendClientMessage(playerID + "|ValidGrenade");
             }
             else
             {
                 //Failed grenade
-                webClient.SendClientMessage(playerID + ":InvalidGrenade");
+                webClient.SendClientMessage(playerID + "|InvalidGrenade");
             }
         }
     }
@@ -265,7 +265,7 @@ public class GamePlay : MonoBehaviour
                 int shieldIndex = gameData.GetValue("ShieldNum");
                 shieldCountdown[shieldIndex].beginCountdown();
 
-                webClient.SendClientMessage(playerID + ":ShieldOn");
+                webClient.SendClientMessage(playerID + "|ShieldOn");
             }
         }
     }
@@ -278,7 +278,7 @@ public class GamePlay : MonoBehaviour
         int shieldIndex = gameData.GetValue("ShieldNum");
         shieldCountdown[shieldIndex].forceToZero();
 
-        webClient.SendClientMessage(playerID + ":ShieldOff");
+        webClient.SendClientMessage(playerID + "|ShieldOff");
     }
 
     private void ResetShieldActivation()
@@ -345,6 +345,6 @@ public class GamePlay : MonoBehaviour
         //???
 
         deathNum++;
-        webClient.SendClientMessage(playerID + ":Die");
+        webClient.SendClientMessage(playerID + "|Die");
     }
 }
