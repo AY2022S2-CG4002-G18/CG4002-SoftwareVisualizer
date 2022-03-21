@@ -74,17 +74,50 @@ public class GameData : MonoBehaviour
             ));
     }
     
-/*    private void SyncHPAndAmmo(string name, int value)
+    public void SyncData(int hp, int bullet, int grenade, int num_death, int num_shield)
     {
-        if (name == "HP")
+        SetValue("HP", hp);
+        SetValue("Ammo", bullet);
+        SetValue("Grenade", grenade);
+
+        gamePlay.deathNum = num_death;
+        if (SetValue("ShieldNum", num_shield))
         {
-            webClient.SendClientMessage(gamePlay.playerID + ":HP-" + value.ToString());
+            for (int shieldIndex = 0; shieldIndex < gamePlay.shieldCountdown.Length; shieldIndex++)
+            {
+                if (shieldIndex < num_shield)
+                {
+                    gamePlay.shieldCountdown[shieldIndex].resetCountDown();
+                }
+                else
+                {
+                    gamePlay.shieldCountdown[shieldIndex].forceToZero();
+                }
+            }
         }
-        if (name == "Ammo")
+
+        //Change score
+        SetValue((gamePlay.playerID == "P1") ? "P2" : "P1", num_death);
+    }
+    public void SyncData(int hp, int bullet, int num_death)
+    {
+        //For opponent
+        SetValue("OHP", hp);
+        SetValue("OAmmo", bullet);
+
+        SetValue((gamePlay.playerID == "P1") ? "P1" : "P2", num_death);
+    }
+    /*    private void SyncHPAndAmmo(string name, int value)
         {
-            webClient.SendClientMessage(gamePlay.playerID + ":Ammo-" + value.ToString());
-        }
-    }*/
+            if (name == "HP")
+            {
+                webClient.SendClientMessage(gamePlay.playerID + ":HP-" + value.ToString());
+            }
+            if (name == "Ammo")
+            {
+                webClient.SendClientMessage(gamePlay.playerID + ":Ammo-" + value.ToString());
+            }
+        }*/
 
     public int GetValue(string name)
     {

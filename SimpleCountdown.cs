@@ -31,6 +31,11 @@ public class SimpleCountdown : MonoBehaviour
         InvokeRepeating("countDownByOne", 0, 1);
     }
 
+    public void forceToNum(int num)
+    {
+        count = num;
+    }
+
     public void forceToZero()
     {
         count = 0;

@@ -13,6 +13,8 @@ public class ConfigManager : MonoBehaviour
 
     public Toggle godMode;
 
+    public InputField timeout;
+
     private void Start()
     {
         ;
@@ -23,6 +25,7 @@ public class ConfigManager : MonoBehaviour
         if (portInput.IsActive()) Config.PORT = int.Parse(portInput.text);
         Config.PLAYER_ID = playerID.options[playerID.value].text;
         Config.GOD_MODE = godMode.isOn;
+        Config.TIMEOUT = float.Parse(timeout.text);
         EnterNextScene();
     }
 

@@ -133,7 +133,7 @@ public class WebClient : MonoBehaviour
                 {
                     Debug.Log("Socket exception: " + socketException);
                 }*/
-
+        Debug.Log("Client sent message - " + clientMessage);
         AmqpClient.Publish(exchangeName, pubRoutingKey, clientMessage);
     }
 

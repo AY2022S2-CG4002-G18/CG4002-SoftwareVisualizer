@@ -8,4 +8,6 @@ public class Config
     public static int PORT = 0;
     public static string PLAYER_ID = "";
     public static bool GOD_MODE = false;
+
+    public static float TIMEOUT = 0;
 }

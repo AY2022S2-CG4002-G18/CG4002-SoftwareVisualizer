@@ -7,6 +7,7 @@ public class GamePlay : MonoBehaviour
     public string playerID;
 
     public GameData gameData;
+    public DataSync dataSync;
     public WebClient webClient;
     public GrenadeControl grenadeControl;
     public GameObject shieldObject;
@@ -37,6 +38,12 @@ public class GamePlay : MonoBehaviour
     {
         playerID = Config.PLAYER_ID;
         webClient.queueName = Config.PLAYER_ID;
+        webClient.pubRoutingKey = "hello" + Config.PLAYER_ID;
+    }
+
+    private void Update()
+    {
+        CheckForShoot();
     }
 
     public void HandleMessageFromServer(string message)
@@ -58,6 +65,11 @@ public class GamePlay : MonoBehaviour
                     case "Shoot":
                         {
                             Invoker.InvokeInMainThread(Shoot);
+                            break;
+                        }
+                    case "Life":
+                        {
+                            Invoker.InvokeInMainThread(Life);
                             break;
                         }
                     case "Shield":
@@ -92,11 +104,16 @@ public class GamePlay : MonoBehaviour
                         }
                     case "Sync":
                         {
-                            Invoker.InvokeInMainThread(SyncData);
+                            //Invoker.InvokeInMainThread(SyncData);
+                            dataSync.StartSync();
                             break;
                         }
                     default:
                         {
+                            if (!value.Contains("-"))
+                            {
+                                return;
+                            }
                             //Handle non-action message
                             string tName = value.Substring(0, value.IndexOf("-")).Trim();
                             string tValue = value.Substring(value.IndexOf("-") + 1).Trim();
@@ -127,6 +144,11 @@ public class GamePlay : MonoBehaviour
                                         Invoker.InvokeInMainThread(() => ChangeOpponentShield(int.Parse(tValue)));
                                         break;
                                     }
+                                case "Sync":
+                                    {
+                                        dataSync.SyncDataFromServer(tValue);
+                                        break;
+                                    }
                             }
 
                             break;
@@ -143,8 +165,8 @@ public class GamePlay : MonoBehaviour
         gameData.SetValue("ShieldNum", 3);
         gameData.SetValue("Ammo", 6);
         gameData.SetValue("Grenade", 2);
-        gameData.SetValue("OHP", 100);
-        gameData.SetValue("OAmmo", 6);
+        //gameData.SetValue("OHP", 100);
+        //gameData.SetValue("OAmmo", 6);
         foreach (SimpleCountdown countdown in shieldCountdown)
         {
             countdown.resetCountDown();
@@ -156,27 +178,65 @@ public class GamePlay : MonoBehaviour
         Init();
     }
 
-    private void SyncData()
-    {
-        gameData.SyncData();
+    
+    public float bulletCheckTime;
 
+    private void CheckForShoot()
+    {
+        if (beginShoot && hitOpponent)
+        {
+            beginShoot = false;
+            hitOpponent = false;
+            CancelInvoke("ResetBeginShoot");
+            CancelInvoke("ResetHitopponent");
+            if (gameData.AddValue("Ammo", -1))
+            {
+                ValidShoot();
+            }
+            else
+            {
+                NoAmmo();
+            }
+        }
     }
+    private bool beginShoot = false;
     private void Shoot()
     {
-        if (gameData.AddValue("Ammo", -1))
-        {
-            //Successful shot
-            shootAudioSource.Play();
+        beginShoot = true;
+        Invoke("ResetBeginShoot", bulletCheckTime);
+    }
+    private void ResetBeginShoot()
+    {
+        beginShoot = false;
+        //Shoot but didn't hit. Missed.
+        NoHit();
+    }
+    private bool hitOpponent = false;
+    private void Life()
+    {
+        hitOpponent = true;
+        Invoke("ResetHitOpponent", bulletCheckTime);
+    }
+    private void ResetHitOpponent()
+    {
+        hitOpponent = false;
+        //Hit but didn't shoot? Shouldn't happen..
+    }
 
-            webClient.SendClientMessage(playerID + "|ValidShoot");
-        }
-        else
-        {
-            //No ammo
-            reloadAnim.SetTrigger("Hint");
+    private void ValidShoot()
+    {
+        shootAudioSource.Play();
 
-            webClient.SendClientMessage(playerID + "|InvalidShoot");
-        }
+        webClient.SendClientMessage(playerID + "|ValidShoot");
+    }
+    private void NoAmmo()
+    {
+        reloadAnim.SetTrigger("Hint");
+        webClient.SendClientMessage(playerID + "|InvalidShoot");
+    }
+    private void NoHit()
+    {
+        webClient.SendClientMessage(playerID + "|InvalidShoot");
     }
 
     private void HitByBullet()
