@@ -24,7 +24,7 @@ public class ConfigManager : MonoBehaviour
         if (hostInput.IsActive()) Config.HOST = hostInput.text;
         if (portInput.IsActive()) Config.PORT = int.Parse(portInput.text);
         Config.PLAYER_ID = playerID.options[playerID.value].text;
-        Config.GOD_MODE = godMode.isOn;
+        if (godMode.IsActive()) Config.GOD_MODE = godMode.isOn;
         Config.TIMEOUT = float.Parse(timeout.text);
         EnterNextScene();
     }

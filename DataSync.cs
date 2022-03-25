@@ -1,8 +1,9 @@
+using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using SimpleJSON;
+
 
 public class DataSync : MonoBehaviour
 {
@@ -54,15 +55,17 @@ public class DataSync : MonoBehaviour
     {
         if (json == null) return;
         Debug.Log(json);
+        json = json.Replace("\'", "");
         JSONNode jSONNode = JSON.Parse(json);
-        Debug.Log(jSONNode);
-        JSONNode playerNode = jSONNode[gamePlay.playerID];
+        JSONNode playerNode = jSONNode[(gamePlay.playerID == "P1") ? "p1" : "p2"];
+        Debug.Log(playerNode);
+
         gameData.SyncData(playerNode["hp"].AsInt,
             playerNode["bullets"].AsInt,
             playerNode["grenades"].AsInt,
             playerNode["num_deaths"].AsInt,
             playerNode["num_shield"].AsInt);
-        JSONNode opponentNode = jSONNode[(gamePlay.playerID == "P1") ? "P2" : "P1"];
+        JSONNode opponentNode = jSONNode[(gamePlay.playerID == "P1") ? "p2" : "p1"];
         gameData.SyncData(opponentNode["hp"].AsInt,
             opponentNode["bullets"].AsInt,
             opponentNode["num_deaths"].AsInt);

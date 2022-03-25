@@ -35,7 +35,7 @@ public class WebClient : MonoBehaviour
     void Start()
     {
         //SetupSocket();
-        SetupAMQP();
+        Invoke("SetupAMQP", 3);
     }
 
     // Update is called once per frame
@@ -52,6 +52,8 @@ public class WebClient : MonoBehaviour
         var subscription = new AmqpQueueSubscription(queueName, false, HandleExchangeMessageReceived);
         //var subscription = new AmqpExchangeSubscription(exchangeName, exchangeType, subRoutingKey, HandleExchangeMessageReceived);
         AmqpClient.Subscribe(subscription);
+
+        Debug.Log(subscription);
     }
 
     private void HandleExchangeMessageReceived(AmqpQueueReceivedMessage received)

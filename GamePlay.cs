@@ -38,7 +38,7 @@ public class GamePlay : MonoBehaviour
     {
         playerID = Config.PLAYER_ID;
         webClient.queueName = Config.PLAYER_ID;
-        webClient.pubRoutingKey = "hello" + Config.PLAYER_ID;
+        webClient.pubRoutingKey = "visualizer" + Config.PLAYER_ID;
     }
 
     private void Update()
@@ -154,6 +154,8 @@ public class GamePlay : MonoBehaviour
                             break;
                         }
                 }
+
+                
             }
         }
     }
@@ -192,6 +194,20 @@ public class GamePlay : MonoBehaviour
             if (gameData.AddValue("Ammo", -1))
             {
                 ValidShoot();
+            }
+            else
+            {
+                NoAmmo();
+            }
+        }
+        else if (beginShoot)
+        {
+            beginShoot = false;
+            CancelInvoke("ResetBeginShoot");
+
+            if (gameData.AddValue("Ammo", -1))
+            {
+                NoHit();
             }
             else
             {
@@ -326,6 +342,7 @@ public class GamePlay : MonoBehaviour
                 shieldCountdown[shieldIndex].beginCountdown();
 
                 webClient.SendClientMessage(playerID + "|ShieldOn");
+                //Invoke("SendShieldOn", 0.5f);
             }
         }
     }
@@ -339,7 +356,17 @@ public class GamePlay : MonoBehaviour
         shieldCountdown[shieldIndex].forceToZero();
 
         webClient.SendClientMessage(playerID + "|ShieldOff");
+        //Invoke("SendShieldOff", 0.5f);
     }
+
+/*    private void SendShieldOn()
+    {
+        webClient.SendClientMessage(playerID + "|ShieldOn");
+    }
+        private void SendShieldOff()
+    {
+        webClient.SendClientMessage(playerID + "|ShieldOff");
+    }*/
 
     private void ResetShieldActivation()
     {
