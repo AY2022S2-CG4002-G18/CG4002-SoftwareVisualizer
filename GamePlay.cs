@@ -196,7 +196,7 @@ public class GamePlay : MonoBehaviour
             beginShoot = false;
             hitOpponent = false;
             CancelInvoke("ResetBeginShoot");
-            CancelInvoke("ResetHitopponent");
+            CancelInvoke("ResetHitOpponent");
             if (gameData.AddValue("Ammo", -1))
             {
                 ValidShoot();
@@ -206,7 +206,7 @@ public class GamePlay : MonoBehaviour
                 NoAmmo();
             }
         }
-        else if (beginShoot)
+/*        else if (beginShoot)
         {
             beginShoot = false;
             CancelInvoke("ResetBeginShoot");
@@ -219,7 +219,7 @@ public class GamePlay : MonoBehaviour
             {
                 NoAmmo();
             }
-        }
+        }*/
     }
     private bool beginShoot = false;
     private void Shoot()
@@ -243,6 +243,7 @@ public class GamePlay : MonoBehaviour
     {
         hitOpponent = false;
         //Hit but didn't shoot? Shouldn't happen..
+        HitButNoShoot();
     }
 
     private void ValidShoot()
@@ -258,7 +259,34 @@ public class GamePlay : MonoBehaviour
     }
     private void NoHit()
     {
-        webClient.SendClientMessage(playerID + "|InvalidShoot");
+        //Really no hit or have async hit, update ammo anyway
+        //Just send invalidshoot
+        if (gameData.AddValue("Ammo", -1))
+        {
+            shootAudioSource.Play();
+            webClient.SendClientMessage(playerID + "|InvalidShoot");
+        }
+        else
+        {
+            NoAmmo();
+        }
+
+    }
+
+    private void HitButNoShoot()
+    {
+        //There must be an async shoot, so no need to update ammo
+        //Just send validshoot
+
+        if (gameData.GetValue("Ammo") > 0) //This is buggy but...
+        {
+            webClient.SendClientMessage(playerID + "|ValidShoot");
+        }
+        else
+        {
+            NoAmmo();
+        }
+        
     }
 
     private void HitByBullet()
