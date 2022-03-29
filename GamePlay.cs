@@ -34,6 +34,7 @@ public class GamePlay : MonoBehaviour
 
     public static bool enemyInSight = false;
 
+    public GameObject gameover;
     private void Start()
     {
         playerID = Config.PLAYER_ID;
@@ -106,6 +107,11 @@ public class GamePlay : MonoBehaviour
                         {
                             //Invoker.InvokeInMainThread(SyncData);
                             dataSync.StartSync();
+                            break;
+                        }
+                    case "Logout":
+                        {
+                            Invoker.InvokeInMainThread(Logout);
                             break;
                         }
                     default:
@@ -433,5 +439,10 @@ public class GamePlay : MonoBehaviour
 
         deathNum++;
         webClient.SendClientMessage(playerID + "|Die");
+    }
+
+    public void Logout()
+    {
+        gameover.SetActive(true);
     }
 }
