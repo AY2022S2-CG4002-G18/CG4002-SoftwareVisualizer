@@ -32,6 +32,10 @@ public class GameData : MonoBehaviour
                 values[index] = value;
 
                 //SyncHPAndAmmo(name, values[index]);
+                if (name == "Ammo")
+                {
+                    gamePlay.reloadAnim.SetInteger("Ammo", values[index]);
+                }
 
                 return true;
             }
@@ -51,6 +55,10 @@ public class GameData : MonoBehaviour
 
                 //SyncHPAndAmmo(name, values[index]);
                 //SyncData();
+                if (name == "Ammo")
+                {
+                    gamePlay.reloadAnim.SetInteger("Ammo", values[index]);
+                }
 
                 return true;
             }

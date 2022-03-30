@@ -35,6 +35,8 @@ public class GamePlay : MonoBehaviour
     public static bool enemyInSight = false;
 
     public GameObject gameover;
+
+    public ConsoleControl consoleControl;
     private void Start()
     {
         playerID = Config.PLAYER_ID;
@@ -59,6 +61,12 @@ public class GamePlay : MonoBehaviour
             Debug.Log(name);
             string value = message.Substring(message.IndexOf("|") + 1).Trim();
             Debug.Log(value);
+
+            if (Config.CONSOLE)
+            {
+                consoleControl.PutText("- Message received from server: " + message);
+            }
+
             if (name == playerID)
             {
                 switch (value)
@@ -254,7 +262,7 @@ public class GamePlay : MonoBehaviour
     }
     private void NoAmmo()
     {
-        reloadAnim.SetTrigger("Hint");
+        //reloadAnim.SetTrigger("Hint");
         webClient.SendClientMessage(playerID + "|InvalidShoot");
     }
     private void NoHit()
@@ -411,7 +419,7 @@ public class GamePlay : MonoBehaviour
     {
         gameData.SetValue("Ammo", 6);
 
-        reloadAnim.SetTrigger("Reload");
+        //reloadAnim.SetTrigger("Reload");
     }
 
     private void ChangeScore(int score)

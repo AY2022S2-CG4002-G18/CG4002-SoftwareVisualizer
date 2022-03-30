@@ -136,6 +136,12 @@ public class WebClient : MonoBehaviour
                     Debug.Log("Socket exception: " + socketException);
                 }*/
         Debug.Log("Client sent message - " + clientMessage);
+
+        if (Config.CONSOLE)
+        {
+            gamePlay.consoleControl.PutText("- Message sent to server: " + clientMessage);
+        }
+
         AmqpClient.Publish(exchangeName, pubRoutingKey, clientMessage);
     }
 

@@ -10,4 +10,6 @@ public class Config
     public static bool GOD_MODE = false;
 
     public static float TIMEOUT = 0;
+
+    public static bool CONSOLE = false;
 }
