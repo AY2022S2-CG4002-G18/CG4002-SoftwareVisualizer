@@ -12,4 +12,6 @@ public class Config
     public static float TIMEOUT = 0;
 
     public static bool CONSOLE = false;
+
+    public static float SHOT_TIMEOUT = 0;
 }

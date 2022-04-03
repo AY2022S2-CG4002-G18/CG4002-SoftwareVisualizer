@@ -20,6 +20,8 @@ public class GamePlay : MonoBehaviour
     public AudioSource shootAudioSource;
     public AudioSource throwAudioSource;
 
+    public Animator uiAnimator;
+
     public Animator reloadAnim;
 
     public GameObject effectRespawn;
@@ -31,6 +33,7 @@ public class GamePlay : MonoBehaviour
     public bool canShield = true;
 
     public int deathNum = 0;
+    private float bulletCheckTime;
 
     public static bool enemyInSight = false;
 
@@ -42,6 +45,7 @@ public class GamePlay : MonoBehaviour
         playerID = Config.PLAYER_ID;
         webClient.queueName = Config.PLAYER_ID;
         webClient.pubRoutingKey = "visualizer" + Config.PLAYER_ID;
+        bulletCheckTime = Config.SHOT_TIMEOUT;
     }
 
     private void Update()
@@ -195,7 +199,7 @@ public class GamePlay : MonoBehaviour
     }
 
     
-    public float bulletCheckTime;
+    
 
     private void CheckForShoot()
     {
@@ -257,6 +261,7 @@ public class GamePlay : MonoBehaviour
     private void ValidShoot()
     {
         shootAudioSource.Play();
+        uiAnimator.SetTrigger("Shoot");
 
         webClient.SendClientMessage(playerID + "|ValidShoot");
     }
@@ -272,6 +277,7 @@ public class GamePlay : MonoBehaviour
         if (gameData.AddValue("Ammo", -1))
         {
             shootAudioSource.Play();
+            uiAnimator.SetTrigger("Shoot");
             webClient.SendClientMessage(playerID + "|InvalidShoot");
         }
         else

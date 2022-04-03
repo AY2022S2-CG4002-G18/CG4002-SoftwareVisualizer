@@ -14,9 +14,11 @@ public class BackgroundImage : MonoBehaviour
     [Range(0.0f, 0.3f)]
     public float Disparity = 0.1f;
 
+
     // Start is called before the first frame update
     void Start()
     {
+        
         camTextureHolder = new Material(shaderMaterial);
         camTextureHolder.mainTexture = input;
 
@@ -26,14 +28,25 @@ public class BackgroundImage : MonoBehaviour
 
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        // shaderMaterial renders the image with Barrel distortion and disparity effect
-        Graphics.Blit(camTextureHolder.mainTexture, null, shaderMaterial);
+        if (Config.CONSOLE)
+        {
+            Graphics.Blit(input, dest = null);
+        }
+        else
+        {
+            // shaderMaterial renders the image with Barrel distortion and disparity effect
+            Graphics.Blit(camTextureHolder.mainTexture, null, shaderMaterial);
+        }
 
     }
 
     void OnGUI()
     {
-        
+        if (Config.CONSOLE)
+        {
+            return;
+        }
+
         int labelHeight = 40;
         int boundary = 20;
 

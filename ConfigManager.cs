@@ -14,6 +14,7 @@ public class ConfigManager : MonoBehaviour
     public Toggle godMode;
 
     public InputField timeout;
+    public InputField shotTimeout;
 
     public Toggle console;
 
@@ -28,6 +29,7 @@ public class ConfigManager : MonoBehaviour
         Config.PLAYER_ID = playerID.options[playerID.value].text;
         if (godMode.IsActive()) Config.GOD_MODE = godMode.isOn;
         Config.TIMEOUT = float.Parse(timeout.text);
+        Config.SHOT_TIMEOUT = float.Parse(shotTimeout.text);
         Config.CONSOLE = console.isOn;
         EnterNextScene();
     }
