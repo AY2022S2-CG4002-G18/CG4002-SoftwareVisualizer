@@ -64,7 +64,9 @@ public class DataSync : MonoBehaviour
             playerNode["bullets"].AsInt,
             playerNode["grenades"].AsInt,
             playerNode["num_deaths"].AsInt,
-            playerNode["num_shield"].AsInt);
+            playerNode["num_shield"].AsInt,
+            playerNode["shield_health"].AsInt,
+            playerNode["shield_time"].AsInt);
         JSONNode opponentNode = jSONNode[(gamePlay.playerID == "P1") ? "p2" : "p1"];
         gameData.SyncData(opponentNode["hp"].AsInt,
             opponentNode["bullets"].AsInt,

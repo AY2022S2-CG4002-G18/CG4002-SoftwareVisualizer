@@ -28,17 +28,24 @@ public class SimpleCountdown : MonoBehaviour
     public void beginCountdown()
     {
         count = max;
+
+        CancelInvoke("countDownByOne");
         InvokeRepeating("countDownByOne", 0, 1);
     }
 
     public void forceToNum(int num)
     {
         count = num;
+
+        CancelInvoke("countDownByOne");
+        InvokeRepeating("countDownByOne", 0, 1);
     }
 
     public void forceToZero()
     {
         count = 0;
+
+        CancelInvoke("countDownByOne");
     }
 
     void countDownByOne()

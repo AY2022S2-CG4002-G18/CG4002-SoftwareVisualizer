@@ -395,6 +395,17 @@ public class GamePlay : MonoBehaviour
         }
     }
 
+    public void Shield(int shield_time, int shield_hp)
+    {
+        gameData.SetValue("Shield", shield_hp);
+        shieldObject.SetActive(true);
+        canShield = false;
+        Invoke("ResetShield", 10 - shield_time);
+        Invoke("ResetShieldActivation", 10 - shield_time);
+
+        webClient.SendClientMessage(playerID + "|ShieldOn");
+    }
+
     private void ResetShield()
     {
         gameData.SetValue("Shield", 0);

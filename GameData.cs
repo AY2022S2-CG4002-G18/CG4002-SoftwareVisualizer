@@ -82,7 +82,7 @@ public class GameData : MonoBehaviour
             ));
     }
     
-    public void SyncData(int hp, int bullet, int grenade, int num_death, int num_shield)
+    public void SyncData(int hp, int bullet, int grenade, int num_death, int num_shield, int shield_hp, int shield_time)
     {
         SetValue("HP", hp);
         SetValue("Ammo", bullet);
@@ -96,6 +96,18 @@ public class GameData : MonoBehaviour
                 if (shieldIndex < num_shield)
                 {
                     gamePlay.shieldCountdown[shieldIndex].resetCountDown();
+                }
+                else if (shieldIndex == num_shield)
+                {
+                    if (shield_hp != 0)
+                    {
+                        gamePlay.shieldCountdown[shieldIndex].forceToNum(10 - shield_time);
+                        gamePlay.Shield(shield_time, shield_hp);
+                    }
+                    else
+                    {
+                        gamePlay.shieldCountdown[shieldIndex].forceToZero();
+                    }
                 }
                 else
                 {
