@@ -17,13 +17,15 @@ public class GamePlay : MonoBehaviour
     public GameObject opponentShieldObject;
     //public GameObject grenadeObject;
     //public Transform grenadeRespawn;
+    [Header("Audio")]
     public AudioSource shootAudioSource;
     public AudioSource throwAudioSource;
-
+    public AudioSource reloadAudioSource;
+    [Header("Anim")]
     public Animator uiAnimator;
 
     public Animator reloadAnim;
-
+    [Header("Objects")]
     public GameObject effectRespawn;
     public GameObject hitEffect;
     public GameObject hitEffectWithShield;
@@ -435,7 +437,7 @@ public class GamePlay : MonoBehaviour
     private void Reload()
     {
         gameData.SetValue("Ammo", 6);
-
+        reloadAudioSource.Play();
         //reloadAnim.SetTrigger("Reload");
     }
 
