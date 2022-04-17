@@ -499,5 +499,7 @@ public class GamePlay : MonoBehaviour
     public void Logout()
     {
         gameover.SetActive(true);
+        
+        webClient.SendClientMessage(playerID + "|VizLogout");
     }
 }
